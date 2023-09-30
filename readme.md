@@ -43,7 +43,6 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -126,7 +125,7 @@
 7. Run the project
   
     ```sh
-      npm run dev
+      npm run start:dev
     ```
 
     Open [http://localhost:3333/docs](http://localhost:3333/docs) with your browser to see the docs.
