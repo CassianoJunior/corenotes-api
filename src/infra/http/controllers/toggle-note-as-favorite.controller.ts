@@ -12,14 +12,18 @@ import {
   Param,
   Patch,
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { NotePresenter } from '../presenters/note-presenter'
 import { NestToggleNoteAsFavoriteUseCase } from '../use-cases/nest-toggle-note-as-favorite'
 
 @Controller('/note/:id')
+@ApiTags('note')
+@ApiBearerAuth('jwt-auth')
 export class ToggleNoteAsFavoriteController {
   constructor(private toggleNoteAsFavorite: NestToggleNoteAsFavoriteUseCase) {}
 
   @Patch()
+  @ApiOperation({ summary: 'Toggle note as favorite' })
   @HttpCode(HttpStatus.OK)
   async handle(@CurrentUser() user: UserPayload, @Param('id') noteId: string) {
     const userId = user.sub

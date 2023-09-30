@@ -11,4 +11,4 @@
 
 ## Tests
 
-- [ ] Test validation pipe on controllers
+- [x] Test validation pipe on controllers

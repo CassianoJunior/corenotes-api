@@ -7,27 +7,52 @@ import {
   ConflictException,
   Controller,
   HttpCode,
+  HttpStatus,
   Post,
   UsePipes,
 } from '@nestjs/common'
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
+import {
+  CreateUserRequestSchema,
+  CreateUserResponseSchema,
+} from '../swagger/schemas/create-user'
 import { NestRegisterUserUseCase } from '../use-cases/nest-register-user'
 
-const createAccountBodySchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  password: z.string(),
-})
+const createAccountBodySchema = z
+  .object({
+    name: z.string(),
+    email: z.string().email(),
+    password: z.string(),
+  })
+  .strict()
 
 type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 
 @Controller('/accounts')
+@ApiTags('auth')
 @Public()
 export class CreateAccountController {
   constructor(private registerUser: NestRegisterUserUseCase) {}
 
   @Post()
-  @HttpCode(201)
+  @ApiOperation({ summary: 'Create account' })
+  @ApiBody({
+    schema: CreateUserRequestSchema.body,
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Account created',
+  })
+  @ApiResponse({
+    schema: CreateUserResponseSchema['400'],
+    status: HttpStatus.BAD_REQUEST,
+  })
+  @ApiResponse({
+    schema: CreateUserResponseSchema['409'],
+    status: HttpStatus.CONFLICT,
+  })
+  @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ZodValidationPipe(createAccountBodySchema))
   async handle(@Body() body: CreateAccountBodySchema) {
     const { name, email, password } = body
