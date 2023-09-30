@@ -13,9 +13,10 @@ import { z } from 'zod'
 import { NestCreateNoteUseCase } from '../use-cases/nest-create-note'
 
 const createNoteBodySchema = z.object({
-  title: z.string(),
-  content: z.string(),
+  title: z.string().nonempty(),
+  content: z.string().nonempty(),
   color: z.string().regex(/^#([0-9a-f]{3}){1,2}$/i),
+  markedAsFavorite: z.boolean().default(false),
 })
 
 type CreateNoteBodySchema = z.infer<typeof createNoteBodySchema>
@@ -30,13 +31,14 @@ export class CreateNoteController {
     @Body() body: CreateNoteBodySchema,
     @CurrentUser() user: UserPayload,
   ) {
-    const { title, content, color } = body
+    const { title, content, color, markedAsFavorite } = body
     const userId = user.sub
 
     const result = await this.createNote.execute({
       title,
       content,
       color,
+      markedAsFavorite,
       userId,
     })
 

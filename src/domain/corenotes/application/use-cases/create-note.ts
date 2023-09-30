@@ -10,6 +10,7 @@ interface CreateNoteUseCaseRequest {
   title: string
   content: string
   color: string
+  markedAsFavorite?: boolean
 }
 
 type CreateNoteUseCaseResponse = Either<
@@ -30,6 +31,7 @@ export class CreateNoteUseCase {
     title,
     content,
     color,
+    markedAsFavorite,
   }: CreateNoteUseCaseRequest): Promise<CreateNoteUseCaseResponse> {
     const userExists = await this.usersRepository.findUserById(userId)
 
@@ -42,6 +44,7 @@ export class CreateNoteUseCase {
       title,
       content,
       color,
+      markedAsFavorite,
     })
 
     await this.notesRepository.create(note)
