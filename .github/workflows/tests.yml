@@ -45,6 +45,7 @@ jobs:
     
     env:
       DATABASE_URL: "postgres://postgres:postgres@localhost:5432/corenotes"
+      JWT_SECRET: "secret-test"
 
     steps:
       - name: Checkout
